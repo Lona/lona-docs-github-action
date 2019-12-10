@@ -15,7 +15,7 @@ async function run() {
 
     await new Promise((resolve, reject) => {
       exec(
-        "./node_modules/gatsby-cli build",
+        "./node_modules/gatsby-cli/lib/index.js build",
         {
           cwd: path.dirname(__dirname),
           env: {
