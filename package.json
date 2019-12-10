@@ -1,0 +1,34 @@
+{
+  "name": "lona-github-action",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Github Action to check if Lona can run on the repo and upload a documentation website to Lona.",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lona/lona-github-action.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "lona"
+  ],
+  "author": "Mathieu Dutour",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "fs-extra": "^8.1.0",
+    "gatsby": "^2.18.8",
+    "gatsby-theme-lona-docs": "*",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.1",
+    "@types/node": "^12.0.4",
+    "typescript": "^3.5.1"
+  }
+}
