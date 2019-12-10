@@ -5,19 +5,27 @@ export function createPages({ actions, graphql }: CreatePagesArgs) {
   const { createPage } = actions;
 
   return graphql<{
+    site: {
+      siteMetadata: { title: string; keywords: string[]; description: string };
+    };
     allLonaDocumentPage: {
       nodes: {
         inputPath: string;
-        id: string;
         children: { inputPath: string }[];
         childMdx: { body: string };
       }[];
     };
   }>(`
     {
+      site {
+        siteMetadata {
+          title
+          keywords
+          description
+        }
+      }
       allLonaDocumentPage {
         nodes {
-          id
           inputPath
           children {
             ... on LonaDocumentPage {
@@ -39,14 +47,23 @@ export function createPages({ actions, graphql }: CreatePagesArgs) {
       return;
     }
 
-    result.data.allLonaDocumentPage.nodes.forEach(n => {
+    const { allLonaDocumentPage, site } = result.data;
+
+    allLonaDocumentPage.nodes.forEach(n => {
       createPage({
         path: `/${n.inputPath
           .replace(/README\.md$/g, "")
           .replace(/\.md$/g, "")}`,
         component: path.join(__dirname, "templates/mdx.js"),
         context: {
-          mdx: n.childMdx.body
+          mdx: n.childMdx.body,
+          site,
+          allLonaDocumentPage: {
+            nodes: allLonaDocumentPage.nodes.map(x => ({
+              inputPath: x.inputPath,
+              children: x.children
+            }))
+          }
         }
       });
     });

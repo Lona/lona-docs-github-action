@@ -1,7 +1,7 @@
 import React from "react";
-import { useStaticQuery } from "gatsby";
+// import { useStaticQuery } from "gatsby";
 // need to import graphql on another line: https://stackoverflow.com/questions/55877659/how-to-fix-gatsby-1-is-undefined
-import { graphql } from "gatsby";
+// import { graphql } from "gatsby";
 import Helmet from "react-helmet";
 import styled from "styled-components";
 
@@ -37,54 +37,56 @@ const Content = styled.main`
   display: flex;
 `;
 
-const Layout = ({ children, location }) => {
-  const data = useStaticQuery<{
-    site: {
-      siteMetadata: { title: string; keywords: string[]; description: string };
-    };
-    allLonaDocumentPage: {
-      nodes: { inputPath: string; children: { inputPath: string }[] }[];
-    };
-  }>(graphql`
-    query LayoutQuery {
-      site {
-        siteMetadata {
-          title
-          keywords
-          description
-        }
-      }
-      allLonaDocumentPage {
-        nodes {
-          inputPath
-          children {
-            ... on LonaDocumentPage {
-              inputPath
-            }
-          }
-        }
-      }
-    }
-  `);
-  const files = cleanupFiles(data.allLonaDocumentPage.nodes);
+const Layout = ({ children, location, site, allLonaDocumentPage }) => {
+  // TODO: for some reason we can't use `useStaticQuery` here: "The result of this StaticQuery could not be fetched."
+  // so instead I'm passing it down as props but it's not really clean
+  // const data = useStaticQuery<{
+  //   site: {
+  //     siteMetadata: { title: string; keywords: string[]; description: string };
+  //   };
+  //   allLonaDocumentPage: {
+  //     nodes: { inputPath: string; children: { inputPath: string }[] }[];
+  //   };
+  // }>(graphql`
+  //   query LayoutQuery {
+  //     site {
+  //       siteMetadata {
+  //         title
+  //         keywords
+  //         description
+  //       }
+  //     }
+  //     allLonaDocumentPage {
+  //       nodes {
+  //         inputPath
+  //         children {
+  //           ... on LonaDocumentPage {
+  //             inputPath
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // `);
+  const files = cleanupFiles(allLonaDocumentPage.nodes);
   return (
     <Page>
       <GlobalStyles />
       <SkipLink href="#MainContent">Skip to main content</SkipLink>
       <Helmet
-        title={data.site.siteMetadata.title}
+        title={site.siteMetadata.title}
         meta={[
           {
             name: "description",
-            content: data.site.siteMetadata.title
+            content: site.siteMetadata.title
           },
           {
             name: "keywords",
-            content: data.site.siteMetadata.keywords.join(", ")
+            content: site.siteMetadata.keywords.join(", ")
           },
           {
             name: "description",
-            content: data.site.siteMetadata.description
+            content: site.siteMetadata.description
           }
         ]}
       />
