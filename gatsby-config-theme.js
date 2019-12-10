@@ -1,5 +1,4 @@
-module.exports = {
-  pathPrefix: process.env.GATSBY_PATH_PREFIX,
+module.exports = themeOptions => ({
   siteMetadata: {
     title: `Design System`,
     description: ``,
@@ -10,11 +9,11 @@ module.exports = {
       resolve: "gatsby-source-filesystem",
       options: {
         name: "__lona-docs",
-        path: process.env.GATSBY_DOCS_PATH
+        path: themeOptions.docsPath
       }
     },
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-styled-components",
     "gatsby-plugin-mdx"
   ]
-};
+});
