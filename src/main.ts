@@ -19,6 +19,7 @@ async function run() {
         {
           cwd: path.dirname(__dirname),
           env: {
+            PATH: process.env.PATH,
             GATSBY_PATH_PREFIX: secretPrefix,
             GATSBY_DOCS_PATH: path.join(outputFolder, "docs.json")
           }
