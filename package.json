@@ -1,11 +1,12 @@
 {
-  "name": "lona-github-action",
+  "name": "gatsby-lona-docs-theme",
   "version": "0.1.0",
-  "private": true,
-  "description": "A Github Action to check if Lona can run on the repo and upload a documentation website to Lona.",
+  "description": "A Gatsby theme used for the Lona documentation websites.",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "develop": "GATSBY_DOCS_PATH=./example/docs.json gatsby develop"
   },
   "repository": {
     "type": "git",
@@ -14,7 +15,8 @@
   "keywords": [
     "actions",
     "node",
-    "lona"
+    "lona",
+    "gatsby"
   ],
   "author": "Mathieu Dutour",
   "license": "MIT",

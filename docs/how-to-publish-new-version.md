@@ -35,3 +35,20 @@ After testing you can [create a tag](https://github.com/actions/toolkit/blob/mas
 ```yaml
 uses: Lona/lona-docs-github-action@v1
 ```
+
+# How to publish a new version of the Gatsby Theme
+
+## Add the proper `gatsby-config.js`
+
+- Rename `gatsby-config.js` to `gatsby-config-action.js`
+- Rename `gatsby-config-theme.js` to `gatsby-config.js`
+
+## Publish the package
+
+- Update the version number in `package.json`
+- Run `npm publish`
+
+## Put back the right `gatsby-config.js`
+
+- Rename `gatsby-config.js` to `gatsby-config-theme.js`
+- Rename `gatsby-config-action.js` to `gatsby-config.js`
