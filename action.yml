@@ -5,7 +5,7 @@ inputs:
   secret_prefix:
     description: "The path to prefix the link with."
     required: false
-    default: "'__lona-docs__/secret/prefix'"
+    default: "__lona-docs__/secret/prefix"
   output_folder:
     description: "The folder that will get deployed to Lona's servers."
     required: false
