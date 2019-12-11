@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "develop": "GATSBY_DOCS_PATH=./example/docs.json gatsby develop"
+    "develop": "GATSBY_PATH_PREFIX=__lona-docs__/secret/prefix GATSBY_DOCS_PATH=./example/docs.json gatsby build --prefix-paths"
   },
   "repository": {
     "type": "git",

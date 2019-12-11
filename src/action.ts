@@ -15,7 +15,7 @@ async function run() {
 
     await new Promise((resolve, reject) => {
       exec(
-        "./node_modules/gatsby-cli/lib/index.js build",
+        "./node_modules/gatsby-cli/lib/index.js build --prefix-paths",
         {
           cwd: path.dirname(__dirname),
           env: {
