@@ -28,4 +28,5 @@ jobs:
 ### Inputs
 
 - **`output_folder`** - The folder where to put the website. Usually `${{ steps.lona.outputs.output_folder }}`.
-- **`secret_prefix`** - The prefix to put in front of links.
+- **`secret_prefix`** (Optional) - The prefix to put in front of links.
+- **`workspace_path`** (Optional) - The path to the Lona workspace.

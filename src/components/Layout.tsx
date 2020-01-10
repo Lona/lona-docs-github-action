@@ -1,11 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 // import { useStaticQuery } from "gatsby";
 // need to import graphql on another line: https://stackoverflow.com/questions/55877659/how-to-fix-gatsby-1-is-undefined
 // import { graphql } from "gatsby";
 import Helmet from "react-helmet";
 import styled from "styled-components";
 
-import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Section from "./Section";
 
@@ -37,7 +36,25 @@ const Content = styled.main`
   display: flex;
 `;
 
-const Layout = ({ children, location, site, allLonaDocumentPage }) => {
+function hasInputPath(x: { inputPath?: string }): x is { inputPath: string } {
+  return !!x.inputPath;
+}
+
+const Layout = ({
+  children,
+  location,
+  site,
+  allLonaDocumentPage
+}: {
+  children: ReactNode;
+  location: Location;
+  site: {
+    siteMetadata: { title: string; keywords: string[]; description: string };
+  };
+  allLonaDocumentPage: {
+    nodes: { inputPath: string; children: { inputPath?: string }[] }[];
+  };
+}) => {
   // TODO: for some reason we can't use `useStaticQuery` here: "The result of this StaticQuery could not be fetched."
   // so instead I'm passing it down as props but it's not really clean
   // const data = useStaticQuery<{
@@ -45,7 +62,7 @@ const Layout = ({ children, location, site, allLonaDocumentPage }) => {
   //     siteMetadata: { title: string; keywords: string[]; description: string };
   //   };
   //   allLonaDocumentPage: {
-  //     nodes: { inputPath: string; children: { inputPath: string }[] }[];
+  //     nodes: { inputPath: string; children: { inputPath?: string }[] }[];
   //   };
   // }>(graphql`
   //   query LayoutQuery {
@@ -68,7 +85,12 @@ const Layout = ({ children, location, site, allLonaDocumentPage }) => {
   //     }
   //   }
   // `);
-  const files = cleanupFiles(allLonaDocumentPage.nodes);
+  const files = cleanupFiles(
+    allLonaDocumentPage.nodes.map(x => ({
+      ...x,
+      children: x.children.filter(hasInputPath)
+    }))
+  );
   return (
     <Page>
       <GlobalStyles />
@@ -90,7 +112,6 @@ const Layout = ({ children, location, site, allLonaDocumentPage }) => {
           }
         ]}
       />
-      <Header />
       <Content>
         <Sidebar files={files} location={location} />
         <Section>{children}</Section>

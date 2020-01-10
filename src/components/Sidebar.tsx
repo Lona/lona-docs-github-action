@@ -1,12 +1,13 @@
 import React from "react";
 import { Link, withPrefix } from "gatsby";
 import styled from "styled-components";
-import { HeaderHeight } from "./ui-constants";
 import { capitalise, Tree } from "./utils";
 
 const Wrapper = styled.nav`
   flex: 0 0 350px;
   margin-top: 0;
+
+  background: rgb(245, 245, 245);
 
   @media (max-width: 1600px) {
     flex: 0 0 300px;
@@ -19,7 +20,7 @@ const Wrapper = styled.nav`
 
 const InnerWrapper = styled.div`
   padding-left: 66px;
-  height: calc(100vh - ${HeaderHeight});
+  height: 100vh;
   overflow-y: auto;
 `;
 

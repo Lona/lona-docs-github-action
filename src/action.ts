@@ -10,6 +10,10 @@ async function run() {
       process.cwd(),
       core.getInput("output_folder")
     );
+    const workspace_path = path.join(
+      process.cwd(),
+      core.getInput("workspace_path") || ""
+    );
 
     fs.mkdirSync(outputFolder, { recursive: true });
 
@@ -21,7 +25,7 @@ async function run() {
           env: {
             PATH: process.env.PATH,
             GATSBY_PATH_PREFIX: secretPrefix,
-            GATSBY_DOCS_PATH: path.join(outputFolder, "docs.json")
+            GATSBY_WORKSPACE_PATH: workspace_path
           }
         },
         (error, stdout, stderr) => {

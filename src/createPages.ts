@@ -1,7 +1,11 @@
 import { CreatePagesArgs } from "gatsby";
 import path from "path";
 
-export function createPages({ actions, graphql }: CreatePagesArgs) {
+export function createPages({
+  actions,
+  graphql,
+  getNodeAndSavePathDependency
+}: CreatePagesArgs) {
   const { createPage } = actions;
 
   return graphql<{
@@ -10,8 +14,9 @@ export function createPages({ actions, graphql }: CreatePagesArgs) {
     };
     allLonaDocumentPage: {
       nodes: {
+        id: string;
         inputPath: string;
-        children: { inputPath: string }[];
+        children: { inputPath?: string }[];
         childMdx: { body: string };
       }[];
     };
@@ -26,6 +31,7 @@ export function createPages({ actions, graphql }: CreatePagesArgs) {
       }
       allLonaDocumentPage {
         nodes {
+          id
           inputPath
           children {
             ... on LonaDocumentPage {
@@ -50,10 +56,12 @@ export function createPages({ actions, graphql }: CreatePagesArgs) {
     const { allLonaDocumentPage, site } = result.data;
 
     allLonaDocumentPage.nodes.forEach(n => {
+      const pagePath = `/${n.inputPath
+        .replace(/README\.md$/g, "")
+        .replace(/\.md$/g, "")}`;
+
       createPage({
-        path: `/${n.inputPath
-          .replace(/README\.md$/g, "")
-          .replace(/\.md$/g, "")}`,
+        path: pagePath,
         component: path.join(__dirname, "templates/mdx.js"),
         context: {
           mdx: n.childMdx.body,
@@ -66,6 +74,7 @@ export function createPages({ actions, graphql }: CreatePagesArgs) {
           }
         }
       });
+      getNodeAndSavePathDependency(n.id, pagePath);
     });
   });
 }
