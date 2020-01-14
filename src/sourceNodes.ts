@@ -3,7 +3,7 @@ import chokidar from "chokidar";
 import fs from "fs";
 import { execSync } from "child_process";
 import { createContentDigest } from "gatsby-core-utils";
-import { ConvertedWorkspace, ConvertedFile } from "./types/flat-tokens";
+import { ConvertedWorkspace, ConvertedFile } from "lonac/types";
 
 const lonac = require.resolve("lonac");
 
