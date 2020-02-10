@@ -1,13 +1,32 @@
-import { SourceNodesArgs, Node } from "gatsby";
+import { SourceNodesArgs, Node, CreateSchemaCustomizationArgs } from "gatsby";
 import chokidar from "chokidar";
 import fs from "fs";
-import { execSync } from "child_process";
 import { createContentDigest } from "gatsby-core-utils";
-import { ConvertedWorkspace, ConvertedFile } from "lonac/types";
+import * as lona from "@lona/compiler";
+import {
+  ConvertedWorkspace,
+  ConvertedFile
+} from "@lona/compiler/lib/plugins/documentation";
 
-const lonac = require.resolve("lonac");
+export function createSchemaCustomization({
+  actions
+}: CreateSchemaCustomizationArgs) {
+  const { createTypes } = actions;
 
-// TODO: create types
+  const typeDefs = `
+    type LonaConfig implements Node @dontInfer {
+      config: LonaConfigFields
+    }
+    type LonaConfigFields {
+      workspaceName: String
+      workspacePath: String!
+      workspaceIcon: String
+      workspaceDescription: String
+      workspaceKeywords: [String!]
+    }
+  `;
+  createTypes(typeDefs);
+}
 
 export function sourceNodes(
   { actions, createNodeId, reporter, getNode }: SourceNodesArgs,
@@ -33,22 +52,37 @@ See docs here - https://github.com/Lona/lona-docs-github-action
     return createNodeId(`lona_workspace >>> ${inputPath}`);
   }
 
-  function createNodesForWorkspace() {
+  async function createNodesForWorkspace() {
     try {
-      const content = execSync(
-        `node ${lonac} documentation --workspace ${workspacePath}`,
-        { encoding: "utf8", stdio: ["inherit", "pipe", "pipe"] }
-      );
-      const data: ConvertedWorkspace = JSON.parse(content);
+      const config = await lona.getConfig(workspacePath);
 
-      const root = data.files.find(x => x.inputPath === "README.md");
+      const id = createId(`${workspacePath}_config`);
+
+      createNode({
+        id,
+        children: [],
+        config: config,
+        internal: {
+          contentDigest: createContentDigest(JSON.stringify(config)),
+          content: JSON.stringify(config),
+          type: `LonaConfig`,
+          mediaType: "application/json"
+        }
+      });
+
+      const content: ConvertedWorkspace = await lona.convert(
+        workspacePath,
+        "documentation"
+      );
+
+      const root = content.files.find(x => x.inputPath === "README.md");
 
       if (!root) {
         reporter.info(`Cannot find root file of the Lona workspace`);
         return;
       }
 
-      makeNode(data, root);
+      makeNode(content, root);
     } catch (err) {
       reporter.panicOnBuild(
         `Error processing Lona Docs:\n
@@ -135,8 +169,7 @@ See docs here - https://github.com/Lona/lona-docs-github-action
 
   return new Promise(resolve => {
     watcher.on(`ready`, () => {
-      createNodesForWorkspace();
-      resolve();
+      createNodesForWorkspace().then(resolve);
     });
   });
 }

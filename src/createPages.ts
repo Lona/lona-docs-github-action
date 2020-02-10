@@ -1,5 +1,6 @@
 import { CreatePagesArgs } from "gatsby";
 import path from "path";
+import { Config } from "@lona/compiler";
 
 export function createPages({
   actions,
@@ -9,8 +10,8 @@ export function createPages({
   const { createPage } = actions;
 
   return graphql<{
-    site: {
-      siteMetadata: { title: string; keywords: string[]; description: string };
+    allLonaConfig: {
+      nodes: { config: Config }[];
     };
     allLonaDocumentPage: {
       nodes: {
@@ -22,11 +23,15 @@ export function createPages({
     };
   }>(`
     {
-      site {
-        siteMetadata {
-          title
-          keywords
-          description
+      allLonaConfig {
+        nodes {
+          config {
+            workspaceName
+            workspacePath
+            workspaceIcon
+            workspaceDescription
+            workspaceKeywords
+          }
         }
       }
       allLonaDocumentPage {
@@ -53,7 +58,23 @@ export function createPages({
       return;
     }
 
-    const { allLonaDocumentPage, site } = result.data;
+    const { allLonaDocumentPage, allLonaConfig } = result.data;
+
+    const config = allLonaConfig.nodes[0]
+      ? allLonaConfig.nodes[0].config
+      : undefined;
+
+    const site = {
+      siteMetadata: {
+        title:
+          config.workspaceName || config.workspacePath
+            ? path.basename(config.workspacePath)
+            : "" || `Design System`,
+        icon: config.workspaceIcon || null,
+        description: config.workspaceDescription || "",
+        keywords: config.workspaceKeywords || ["Lona", "design system"]
+      }
+    };
 
     allLonaDocumentPage.nodes.forEach(n => {
       const pagePath = `/${n.inputPath
