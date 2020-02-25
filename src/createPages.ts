@@ -2,17 +2,24 @@ import { CreatePagesArgs } from "gatsby";
 import path from "path";
 import { Config } from "@lona/compiler";
 
-export async function createPages({
-  actions,
-  graphql,
-  getNodeAndSavePathDependency
-}: CreatePagesArgs) {
+export async function createPages(
+  { actions, graphql, getNodeAndSavePathDependency }: CreatePagesArgs,
+  pluginOptions?: {
+    workspacePath?: string;
+    version?: string;
+    baseURL?: string;
+  }
+) {
   const { createPage } = actions;
+
+  const baseURL = pluginOptions?.baseURL || process.env.GATSBY_BASE_URL;
 
   createPage({
     path: "lona-design-artifacts",
     component: path.join(__dirname, "pages/lona-design-artifacts.js"),
-    context: {}
+    context: {
+      baseURL
+    }
   });
 
   const result = await graphql<{

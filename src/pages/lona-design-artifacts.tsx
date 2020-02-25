@@ -1,7 +1,7 @@
 import React from "react";
 import { withPrefix } from "gatsby";
 
-export default () => {
+export default ({ pageContext }: { pageContext: { baseURL: string } }) => {
   return (
     <div>
       <p>Download the figma plugin</p>
@@ -9,9 +9,7 @@ export default () => {
         Add the Sketch library:{" "}
         <a
           href={`sketch://add-library?url=${encodeURIComponent(
-            `${process.env.GATSTBY_BASE_URL}${withPrefix(
-              "/sketch-library.xml"
-            )}`
+            `${pageContext.baseURL}${withPrefix("/sketch-library.xml")}`
           )}`}
         >
           Add Library
