@@ -7,17 +7,15 @@ export default () => {
       <p>Download the figma plugin</p>
       <p>
         Add the Sketch library:{" "}
-        <button
-          onClick={() => {
-            location.href = `sketch://add-library?url=${encodeURIComponent(
-              `${process.env.GATSTBY_BASE_URL}${withPrefix(
-                "/sketch-library.xml"
-              )}`
-            )}`;
-          }}
+        <a
+          href={`sketch://add-library?url=${encodeURIComponent(
+            `${process.env.GATSTBY_BASE_URL}${withPrefix(
+              "/sketch-library.xml"
+            )}`
+          )}`}
         >
           Add Library
-        </button>
+        </a>
       </p>
     </div>
   );
