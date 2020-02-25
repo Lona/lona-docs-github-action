@@ -9,6 +9,12 @@ export async function createPages({
 }: CreatePagesArgs) {
   const { createPage } = actions;
 
+  createPage({
+    path: "lona-design-artifacts",
+    component: path.join(__dirname, "pages/lona-design-artifacts.js"),
+    context: {}
+  });
+
   const result = await graphql<{
     allLonaConfig: {
       nodes: { config: Config }[];
