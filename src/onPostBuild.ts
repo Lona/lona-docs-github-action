@@ -6,7 +6,7 @@ import convertDate from "rfc822-date";
 import { ConvertedWorkspace } from "@lona/compiler/lib/plugins/documentation";
 
 const tokensOutputPath = `./public/flat-tokens.json`;
-const sketchLibRSSOutputPath = `./public/sketch-library.rss`;
+const sketchLibRSSOutputPath = `./public/sketch-library.xml`;
 
 /**
  * Output the flat-tokens file
@@ -22,7 +22,7 @@ export async function onPostBuild(
   const workspacePath =
     pluginOptions?.workspacePath || process.env.GATSBY_WORKSPACE_PATH;
   const version = pluginOptions?.version || process.env.GATSBY_VERSION;
-  const baseURL = pluginOptions?.baseURL || process.env.GATSTBY_BASE_URL;
+  const baseURL = pluginOptions?.baseURL || process.env.GATSBY_BASE_URL;
 
   // Validate that the path exists.
   if (!workspacePath || !fs.existsSync(workspacePath)) {
@@ -94,9 +94,7 @@ See docs here - https://github.com/Lona/lona-docs-github-action
     <item>
       <title>${title}</title>
       <pubDate>${convertDate(new Date())}</pubDate>
-      <enclosure url="${baseURL}${
-      pathPrefix ? `/${pathPrefix}` : ""
-    }/library.sketch" type="application/octet-stream" sparkle:version="${version}"/>
+      <enclosure url="${baseURL}${pathPrefix}/library.sketch" type="application/octet-stream" sparkle:version="${version}"/>
     </item>
   </channel>
 </rss>`

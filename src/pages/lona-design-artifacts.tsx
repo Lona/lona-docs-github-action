@@ -11,7 +11,7 @@ export default () => {
           onClick={() => {
             location.href = `sketch://add-library?url=${encodeURIComponent(
               `${process.env.GATSTBY_BASE_URL}${withPrefix(
-                "/sketch-library.rss"
+                "/sketch-library.xml"
               )}`
             )}`;
           }}
