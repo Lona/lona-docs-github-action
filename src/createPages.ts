@@ -2,14 +2,14 @@ import { CreatePagesArgs } from "gatsby";
 import path from "path";
 import { Config } from "@lona/compiler";
 
-export function createPages({
+export async function createPages({
   actions,
   graphql,
   getNodeAndSavePathDependency
 }: CreatePagesArgs) {
   const { createPage } = actions;
 
-  return graphql<{
+  const result = await graphql<{
     allLonaConfig: {
       nodes: { config: Config }[];
     };
@@ -49,53 +49,51 @@ export function createPages({
         }
       }
     }
-  `).then(result => {
-    if (result.errors) {
-      throw result.errors[0];
+  `);
+
+  if (result.errors) {
+    throw result.errors[0];
+  }
+
+  if (!result.data) {
+    return;
+  }
+
+  const { allLonaDocumentPage, allLonaConfig } = result.data;
+
+  const config = allLonaConfig.nodes[0]?.config;
+
+  const site = {
+    siteMetadata: {
+      title:
+        config.workspaceName || config.workspacePath
+          ? path.basename(config.workspacePath)
+          : "" || `Design System`,
+      icon: config.workspaceIcon || null,
+      description: config.workspaceDescription || "",
+      keywords: config.workspaceKeywords || ["Lona", "design system"]
     }
+  };
 
-    if (!result.data) {
-      return;
-    }
+  allLonaDocumentPage.nodes.forEach(n => {
+    const pagePath = `/${n.inputPath
+      .replace(/README\.md$/g, "")
+      .replace(/\.md$/g, "")}`;
 
-    const { allLonaDocumentPage, allLonaConfig } = result.data;
-
-    const config = allLonaConfig.nodes[0]
-      ? allLonaConfig.nodes[0].config
-      : undefined;
-
-    const site = {
-      siteMetadata: {
-        title:
-          config.workspaceName || config.workspacePath
-            ? path.basename(config.workspacePath)
-            : "" || `Design System`,
-        icon: config.workspaceIcon || null,
-        description: config.workspaceDescription || "",
-        keywords: config.workspaceKeywords || ["Lona", "design system"]
-      }
-    };
-
-    allLonaDocumentPage.nodes.forEach(n => {
-      const pagePath = `/${n.inputPath
-        .replace(/README\.md$/g, "")
-        .replace(/\.md$/g, "")}`;
-
-      createPage({
-        path: pagePath,
-        component: path.join(__dirname, "templates/mdx.js"),
-        context: {
-          mdx: n.childMdx.body,
-          site,
-          allLonaDocumentPage: {
-            nodes: allLonaDocumentPage.nodes.map(x => ({
-              inputPath: x.inputPath,
-              children: x.children
-            }))
-          }
+    createPage({
+      path: pagePath,
+      component: path.join(__dirname, "templates/mdx.js"),
+      context: {
+        mdx: n.childMdx.body,
+        site,
+        allLonaDocumentPage: {
+          nodes: allLonaDocumentPage.nodes.map(x => ({
+            inputPath: x.inputPath,
+            children: x.children
+          }))
         }
-      });
-      getNodeAndSavePathDependency(n.id, pagePath);
+      }
     });
+    getNodeAndSavePathDependency(n.id, pagePath);
   });
 }

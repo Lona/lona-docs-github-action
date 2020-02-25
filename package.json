@@ -7,6 +7,7 @@
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "develop:gatsby": "GATSBY_PATH_PREFIX=__lona-docs__/secret/prefix GATSBY_WORKSPACE_PATH=../TestWorkspace gatsby develop",
+    "build:example": "GATSBY_PATH_PREFIX=__lona-docs__/secret/prefix GATSBY_WORKSPACE_PATH=../TestWorkspace gatsby build --prefix-paths",
     "develop:ts": "tsc --watch",
     "develop": "concurrently \"npm:develop:gatsby\" \"npm:develop:ts\"",
     "start": "npm run develop"
@@ -39,6 +40,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-helmet": "^5.2.1",
+    "rfc822-date": "0.0.3",
     "styled-components": "^4.4.1"
   },
   "devDependencies": {

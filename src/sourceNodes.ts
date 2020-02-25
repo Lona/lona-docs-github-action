@@ -35,17 +35,17 @@ export function sourceNodes(
   const { createNode, deleteNode, createParentChildLink } = actions;
 
   const workspacePath =
-    (pluginOptions && pluginOptions.workspacePath) ||
-    process.env.GATSBY_WORKSPACE_PATH;
+    pluginOptions?.workspacePath || process.env.GATSBY_WORKSPACE_PATH;
 
   // Validate that the path exists.
-  if (!fs.existsSync(workspacePath)) {
+  if (!workspacePath || !fs.existsSync(workspacePath)) {
     reporter.panic(`
 The path passed to gatsby-lona-docs-theme does not exist on your file system:
 ${workspacePath}
 Please pick a path to an existing directory.
 See docs here - https://github.com/Lona/lona-docs-github-action
       `);
+    return;
   }
 
   function createId(inputPath: string) {
@@ -53,6 +53,9 @@ See docs here - https://github.com/Lona/lona-docs-github-action
   }
 
   async function createNodesForWorkspace() {
+    if (!workspacePath) {
+      return;
+    }
     try {
       const config = await lona.getConfig(workspacePath);
 

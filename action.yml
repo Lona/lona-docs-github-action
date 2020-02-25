@@ -2,14 +2,22 @@ name: "Lona Docs GitHub Action"
 description: "A Github Action to build the lona docs."
 author: "Mathieu Dutour"
 inputs:
-  secret_prefix:
+  path_prefix:
     description: "The path to prefix the link with."
     required: false
-    default: "__lona-docs__/secret/prefix"
   output_folder:
     description: "The folder that will get deployed to Lona's servers."
     required: false
     default: "./.output"
+  workspace_path:
+    description: "The path to the Lona workspace."
+    required: false
+  version:
+    description: "The version being built."
+    required: false
+  base_url:
+    description: "The url where the website will be deployed."
+    required: false
 runs:
   using: "node12"
   main: "lib/action.js"

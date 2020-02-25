@@ -47,7 +47,7 @@ const LinkProxy = (props: { href: string; className?: string }) => {
 
 export const a = styled(LinkProxy)`
   ${props =>
-    props.className.split(" ").indexOf("page") !== -1
+    (props.className || "").split(" ").indexOf("page") !== -1
       ? `
 display: block;
 background: ${Colors.blockBackground};
@@ -71,7 +71,8 @@ const TokenWrapper = styled.div`
 
 const UnknownTokenPreview = styled.div``;
 const TokenPreview = styled(UnknownTokenPreview)<{
-  type: "color" | "textStyle" | "shadow";
+  type: "textStyle" | "shadow" | "color";
+  "data-color"?: string;
 }>`
   ${props =>
     props.type === "color"

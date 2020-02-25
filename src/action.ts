@@ -5,7 +5,9 @@ import { exec } from "child_process";
 
 async function run() {
   try {
-    const secretPrefix = core.getInput("secret_prefix");
+    const pathPrefix = core.getInput("path_prefix") || "";
+    const version = core.getInput("version") || "";
+    const baseURL = core.getInput("base_url") || "";
     const outputFolder = path.join(
       process.cwd(),
       core.getInput("output_folder")
@@ -24,8 +26,10 @@ async function run() {
           cwd: path.dirname(__dirname),
           env: {
             PATH: process.env.PATH,
-            GATSBY_PATH_PREFIX: secretPrefix,
-            GATSBY_WORKSPACE_PATH: workspace_path
+            GATSBY_PATH_PREFIX: pathPrefix,
+            GATSBY_WORKSPACE_PATH: workspace_path,
+            GATSBY_VERSION: version,
+            GATSBY_BASE_URL: baseURL
           }
         },
         (error, stdout, stderr) => {
