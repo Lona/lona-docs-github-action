@@ -6,8 +6,9 @@ import { capitalise, Tree } from "./utils";
 const Wrapper = styled.nav`
   flex: 0 0 350px;
   margin-top: 0;
+  // border-right: 1px solid rgba(0, 0, 0, 0.08);
 
-  background: rgb(245, 245, 245);
+  // background: rgb(245, 245, 245);
 
   @media (max-width: 1600px) {
     flex: 0 0 300px;
@@ -19,8 +20,8 @@ const Wrapper = styled.nav`
 `;
 
 const InnerWrapper = styled.div`
-  padding-left: 66px;
-  height: 100vh;
+  padding: 32px 0 32px 65px;
+  height: calc(100vh - 120px);
   overflow-y: auto;
 `;
 
@@ -28,10 +29,20 @@ const NavigationWrapper = styled.nav`
   flex: 0 0 auto;
 `;
 
-const ItemWrapper = styled.li``;
+const ItemWrapper = styled.li`
+  height: 32px;
+  display: flex;
+  align-items: center;
+
+  & + li {
+    margin-top: 12px;
+  }
+`;
 
 const NavigationItem = styled(Link)`
   text-decoration: none;
+  color: #000000;
+  font-size: 18px;
 `;
 
 const Section = styled(ItemWrapper)`
@@ -77,48 +88,71 @@ const SubNavigation = ({
   );
 };
 
+const SidebarItem = ({
+  name,
+  selected
+}: {
+  name: string;
+  selected: boolean;
+}) => {
+  return (
+    <ItemWrapper key={name}>
+      <NavigationItem to={`/${name}`}>
+        <SubsectionHeader selected={selected}>
+          {capitalise(decodeURIComponent(name))}
+        </SubsectionHeader>
+      </NavigationItem>
+      {/* {selected && (
+        <SubNavigation
+          subsection={children}
+          location={location}
+        />
+      )} */}
+    </ItemWrapper>
+  );
+};
+
 const Sidebar = ({ location, files }: { location: Location; files: Tree }) => {
+  if (files.length === 0) return null;
+  // return null;
+
   return (
     <Wrapper>
       <InnerWrapper>
         <NavigationWrapper aria-label="Primary navigation">
           <ul>
-            {files.map(section => {
-              return (
-                <Section key={section.name}>
-                  <NavigationItem to={`/${section.name}`}>
-                    <SectionHeader
-                      selected={isSelected(location, section.name)}
-                    >
-                      {decodeURIComponent(section.name)}
-                    </SectionHeader>
-                  </NavigationItem>
-                  {section.children.length ? (
-                    <ul>
-                      {section.children.map(subsection => {
-                        const selected = isSelected(location, subsection.name);
-                        return (
-                          <ItemWrapper key={subsection.name}>
-                            <NavigationItem to={`/${subsection.name}`}>
-                              <SubsectionHeader selected={selected}>
-                                {capitalise(
-                                  decodeURIComponent(subsection.name)
-                                )}
-                              </SubsectionHeader>
-                            </NavigationItem>
-                            {selected && (
-                              <SubNavigation
-                                subsection={subsection.children}
-                                location={location}
-                              />
-                            )}
-                          </ItemWrapper>
-                        );
-                      })}
-                    </ul>
-                  ) : null}
-                </Section>
+            {files.map(file => {
+              return file.children.length === 0 ? (
+                <SidebarItem
+                  name={file.name}
+                  selected={isSelected(location, file.name)}
+                />
+              ) : (
+                <SidebarItem
+                  name={file.name}
+                  selected={isSelected(location, file.name)}
+                />
               );
+
+              // return (
+              //   <Section key={file.name}>
+              //     <NavigationItem to={`/${file.name}`}>
+              //       <SectionHeader
+              //         selected={isSelected(location, file.name)}
+              //       >
+              //         {decodeURIComponent(file.name)}
+              //       </SectionHeader>
+              //     </NavigationItem>
+              //     {file.children.length ? (
+              //       <ul>
+              //         {file.children.map(subsection => {
+              //           const selected = isSelected(location, subsection.name);
+
+              //         })}
+              //       </ul>
+              //     ) : null}
+              //   </Section>
+              // );
             })}
           </ul>
         </NavigationWrapper>

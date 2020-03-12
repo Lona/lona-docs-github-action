@@ -6,28 +6,66 @@ import path from "path";
 import { Colors, Spacings } from "./ui-constants";
 import { isInternal } from "../utils/url";
 
-export const p = styled.p`
-  color: black;
-  margin-bottom: ${Spacings.block};
-`;
+// case .paragraph, .quote: return .light
+// case .h6, .h5, .h4: return .regular
+// case .h3: return .medium
+// case .h2: return .semibold
+// case .h1: return .bold
+
 export const h1 = styled.h1`
-  margin-bottom: ${Spacings.block};
+  font-size: 42px;
+  line-height: 1.75;
+  font-weight: 700;
+  margin-bottom: 4px;
 `;
+
 export const h2 = styled.h2`
-  margin-bottom: ${Spacings.block};
+  font-size: 30px;
+  line-height: 1.75;
+  font-weight: 600;
+  margin-bottom: 4px;
+
+  ${h1} + & {
+    margin-top: 24px;
+  }
 `;
+
 export const h3 = styled.h3`
-  margin-bottom: ${Spacings.block};
+  font-size: 22px;
+  line-height: 1.75;
+  font-weight: 500;
+  margin-bottom: 4px;
 `;
+
 export const h4 = styled.h4`
+  font-size: 16px;
+  line-height: 1.75;
   margin-bottom: ${Spacings.block};
 `;
+
 export const h5 = styled.h5`
+  font-size: 16px;
+  line-height: 1.75;
   margin-bottom: ${Spacings.block};
 `;
+
 export const h6 = styled.h6`
+  font-size: 16px;
+  line-height: 1.75;
   margin-bottom: ${Spacings.block};
 `;
+
+export const p = styled.p`
+  font-size: 16px;
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 8px;
+
+  ${h1} + &, ${h2} + &, ${h3} + & {
+    margin-top: 4px;
+  }
+`;
+
 export const thematicBreak = styled.hr``;
 
 const LinkProxy = (props: {
@@ -60,11 +98,14 @@ export const a = styled(LinkProxy)`
     (props.className || "").split(" ").indexOf("page") !== -1
       ? `
 display: block;
-background: ${Colors.blockBackground};
+// background: ${Colors.blockBackground};
 color: ${Colors.editableText};
-text-decoration: none;
-padding: 8px;
+// text-decoration: none;
+// padding: 4px 8px;
 margin-bottom: ${Spacings.block};
+font-size: 16px;
+line-height: 1.75;
+font-weight: 500;
 `
       : ""}
 `;

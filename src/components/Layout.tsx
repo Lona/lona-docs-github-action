@@ -10,12 +10,13 @@ import Section from "./Section";
 
 import { cleanupFiles } from "./utils";
 import { GlobalStyles } from "./globalStyles";
+import Header from "./navigation/Header";
 
 const Page = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: calc(100vh - 120px);
   > * {
     flex: none;
   }
@@ -112,6 +113,7 @@ const Layout = ({
           }
         ]}
       />
+      <Header />
       <Content>
         <Sidebar files={files} location={location} />
         <Section>{children}</Section>

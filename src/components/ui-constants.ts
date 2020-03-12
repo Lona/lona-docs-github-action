@@ -13,5 +13,5 @@ export const Colors = {
 };
 
 export const Spacings = {
-  block: "6px"
+  block: "8px"
 };
