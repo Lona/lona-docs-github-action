@@ -48,7 +48,7 @@ const LinkProxy = (props: {
   if (!path.isAbsolute(newHref)) {
     const relativePath = path.relative(withPrefix("/"), location.pathname);
 
-    newHref = path.join(relativePath, newHref);
+    newHref = withPrefix(path.join("/", relativePath, newHref));
   }
 
   return <Link {...rest} to={newHref} />;
