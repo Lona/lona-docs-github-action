@@ -44,11 +44,12 @@ const LinkProxy = (props: {
 
   let newHref = href.replace(/\.md$/, "");
 
-  // Convert relative to absolute path
+  // Convert relative to absolute path.
+  // We make a path _without_ the prefix, since gatsby's Link adds it automatically.
   if (!path.isAbsolute(newHref)) {
     const relativePath = path.relative(withPrefix("/"), location.pathname);
 
-    newHref = withPrefix(path.join("/", relativePath, newHref));
+    newHref = path.join("/", relativePath, newHref);
   }
 
   return <Link {...rest} to={newHref} />;
