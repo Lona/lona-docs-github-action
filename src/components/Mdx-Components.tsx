@@ -1,8 +1,10 @@
 import React from "react";
 import { Link, withPrefix } from "gatsby";
 import styled from "styled-components";
+import path from "path";
 
 import { Colors, Spacings } from "./ui-constants";
+import { isInternal } from "../utils/url";
 
 export const p = styled.p`
   color: black;
@@ -28,32 +30,28 @@ export const h6 = styled.h6`
 `;
 export const thematicBreak = styled.hr``;
 
-const LinkProxy = (props: { href: string; className?: string }) => {
-  const internal = /^(\/(?!\/)|\w|\.+\/)/.test(props.href);
+const LinkProxy = (props: {
+  location: Location;
+  href: string;
+  className?: string;
+}) => {
+  const { location, href, ...rest } = props;
 
-  // external link so use a
-  if (!internal) {
-    return <a {...props} />;
+  // Use an anchor tag for external links
+  if (!isInternal(href)) {
+    return <a {...rest} href={href} />;
   }
 
-  let newHref = props.href.replace(/\.md$/, "");
+  let newHref = href.replace(/\.md$/, "");
 
-  if (newHref.indexOf("/") !== 0) {
-    // this is a relative link from the current page
+  // Convert relative to absolute path
+  if (!path.isAbsolute(newHref)) {
+    const relativePath = path.relative(withPrefix("/"), location.pathname);
 
-    let root = "/";
-    if (typeof window !== "undefined") {
-      // TODO: make this work with SSR (maybe passing the location in a Context?)
-      const prefix = withPrefix("/");
-      root = window.location.pathname.replace(prefix, "/");
-      if (root !== "/") {
-        root += "/";
-      }
-    }
-    newHref = `${root}${newHref}`;
+    newHref = path.join(relativePath, newHref);
   }
 
-  return <Link {...props} to={newHref} />;
+  return <Link {...rest} to={newHref} />;
 };
 
 export const a = styled(LinkProxy)`
