@@ -138,7 +138,6 @@ See docs here - https://github.com/Lona/lona-docs-github-action
         /README.md$/g,
         ""
       )}${inputPath}`;
-      console.log(resolvedInputPath);
       const child = data.files.find(
         x =>
           x.inputPath === resolvedInputPath ||
