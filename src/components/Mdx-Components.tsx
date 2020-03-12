@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "gatsby";
+import { Link, withPrefix } from "gatsby";
 import styled from "styled-components";
 
 import { Colors, Spacings } from "./ui-constants";
@@ -39,7 +39,18 @@ const LinkProxy = (props: { href: string; className?: string }) => {
   let newHref = props.href.replace(/\.md$/, "");
 
   if (newHref.indexOf("/") !== 0) {
-    newHref = `/${newHref}`;
+    // this is a relative link from the current page
+
+    let root = "/";
+    if (typeof window !== "undefined") {
+      // TODO: make this work with SSR (maybe passing the location in a Context?)
+      const prefix = withPrefix("/");
+      root = window.location.pathname.replace(prefix, "/");
+      if (root !== "/") {
+        root += "/";
+      }
+    }
+    newHref = `${root}${newHref}`;
   }
 
   return <Link {...props} to={newHref} />;

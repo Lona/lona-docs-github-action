@@ -134,7 +134,16 @@ See docs here - https://github.com/Lona/lona-docs-github-action
     }
 
     obj.contents.value.children.forEach(inputPath => {
-      const child = data.files.find(x => x.inputPath === inputPath);
+      const resolvedInputPath = `${obj.inputPath.replace(
+        /README.md$/g,
+        ""
+      )}${inputPath}`;
+      console.log(resolvedInputPath);
+      const child = data.files.find(
+        x =>
+          x.inputPath === resolvedInputPath ||
+          x.inputPath === `${resolvedInputPath}/README.md`
+      );
       if (child) {
         makeNode(data, child, lonaNode);
       }
