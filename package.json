@@ -9,7 +9,7 @@
     "develop:gatsby": "GATSBY_PATH_PREFIX=__lona-docs__/secret/prefix GATSBY_WORKSPACE_PATH=../TestWorkspace gatsby develop",
     "build:example": "GATSBY_BASE_URL=base-url GATSBY_PATH_PREFIX=__lona-docs__/secret/prefix GATSBY_WORKSPACE_PATH=../TestWorkspace gatsby build --prefix-paths",
     "develop:ts": "tsc --watch",
-    "develop": "concurrently \"npm:develop:gatsby\" \"npm:develop:ts\"",
+    "develop": "tsc && concurrently \"npm:develop:gatsby\" \"npm:develop:ts\"",
     "start": "npm run develop"
   },
   "repository": {
