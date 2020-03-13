@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import { MDXProvider } from "@mdx-js/react";
 import Layout from "../components/Layout";
@@ -16,14 +16,26 @@ export default function Template(props: {
     };
   };
 }) {
+  const { location, pageContext } = props;
+
+  const componentsWithLocation = useMemo(
+    () => ({
+      ...components,
+      a: (props: { href: string; className?: string }) => (
+        <components.a location={location} {...props} />
+      )
+    }),
+    [location.href]
+  );
+
   return (
     <Layout
-      location={props.location}
-      site={props.pageContext.site}
-      allLonaDocumentPage={props.pageContext.allLonaDocumentPage}
+      location={location}
+      site={pageContext.site}
+      allLonaDocumentPage={pageContext.allLonaDocumentPage}
     >
-      <MDXProvider components={components}>
-        <MDXRenderer>{props.pageContext.mdx}</MDXRenderer>
+      <MDXProvider components={componentsWithLocation}>
+        <MDXRenderer>{pageContext.mdx}</MDXRenderer>
       </MDXProvider>
     </Layout>
   );
