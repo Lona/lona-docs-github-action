@@ -8,7 +8,7 @@ import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Section from "./Section";
 
-import { cleanupFiles } from "./utils";
+import { buildFileTree, Tree } from "./utils";
 import { GlobalStyles } from "./globalStyles";
 import Header from "./navigation/Header";
 
@@ -86,12 +86,17 @@ const Layout = ({
   //     }
   //   }
   // `);
-  const files = cleanupFiles(
+  const fileTree: Tree | null = buildFileTree(
     allLonaDocumentPage.nodes.map(x => ({
       ...x,
       children: x.children.filter(hasInputPath)
     }))
   );
+
+  if (!fileTree) {
+    return <div>Failed to find root Lona page.</div>;
+  }
+
   return (
     <Page>
       <GlobalStyles />
@@ -115,7 +120,7 @@ const Layout = ({
       />
       <Header />
       <Content>
-        <Sidebar files={files} location={location} />
+        <Sidebar fileTree={fileTree} location={location} />
         <Section>{children}</Section>
       </Content>
     </Page>

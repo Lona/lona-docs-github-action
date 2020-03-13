@@ -1,7 +1,10 @@
 import React from "react";
 import { Link, withPrefix } from "gatsby";
 import styled from "styled-components";
+import path from "path";
+
 import { capitalise, Tree } from "./utils";
+import Spacer from "./Spacer";
 
 const Wrapper = styled.nav`
   flex: 0 0 350px;
@@ -30,130 +33,117 @@ const NavigationWrapper = styled.nav`
 `;
 
 const ItemWrapper = styled.li`
-  height: 32px;
-  display: flex;
-  align-items: center;
-
   & + li {
     margin-top: 12px;
   }
 `;
 
-const NavigationItem = styled(Link)`
-  text-decoration: none;
+const NavigationItem = styled(Link)<{ selected: boolean }>`
+  height: 32px;
+  display: flex;
+  align-items: center;
+  text-decoration: ${props => (props.selected ? `underline` : `none`)};
   color: #000000;
   font-size: 18px;
+  font-weight: ${props => (props.selected ? `700` : `inherit`)};
 `;
 
 const Section = styled(ItemWrapper)`
   padding: 28px 0;
 `;
 
-const SubTitles = styled.ul`
-  padding-left: 10px;
+const NestedItemList = styled.ul`
+  padding-left: 16px;
+  padding-top: 12px;
 `;
 
 const SectionHeader = styled.span<{ selected: boolean }>`
   text-transform: uppercase;
 `;
-const SubsectionHeader = styled.span<{ selected: boolean }>``;
-const SubSubsectionHeader = styled.span<{ selected: boolean }>``;
 
-function isSelected(location: Location, section: string) {
-  const prefixedPath = withPrefix(section);
-  return location.pathname.indexOf(prefixedPath) === 0;
+const SubsectionHeader = styled.span<{ selected: boolean }>``;
+
+function formatName(name: string) {
+  return capitalise(decodeURIComponent(path.basename(name)));
 }
 
-const SubNavigation = ({
-  subsection,
-  location
-}: {
-  subsection: Tree;
-  location: Location;
-}) => {
+function isSelected(location: Location, name: string) {
+  const prefixedPath = withPrefix(name);
   return (
-    <SubTitles>
-      {subsection.map(subsubSection => (
-        <li>
-          <NavigationItem to={subsubSection.name}>
-            <SubSubsectionHeader
-              selected={isSelected(location, subsubSection.name)}
-            >
-              {capitalise(subsubSection.name)}
-            </SubSubsectionHeader>
-          </NavigationItem>
-        </li>
-      ))}
-    </SubTitles>
+    location.pathname == prefixedPath || location.pathname == `${prefixedPath}/`
   );
-};
+}
+
+function isDescendantSelected(location: Location, name: string) {
+  const prefixedPath = withPrefix(name);
+  return location.pathname.startsWith(prefixedPath);
+}
+
+const Bullet = styled.span`
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #525252;
+`;
 
 const SidebarItem = ({
-  name,
-  selected
+  location,
+  item: { name, children },
+  depth = 0
 }: {
-  name: string;
-  selected: boolean;
+  location: Location;
+  item: Tree;
+  depth?: number;
 }) => {
+  const selected = isSelected(location, name);
+  const descendantSelected = isDescendantSelected(location, name);
+
   return (
     <ItemWrapper key={name}>
-      <NavigationItem to={`/${name}`}>
+      <NavigationItem to={`/${name}`} selected={selected}>
+        {depth > 0 && (
+          <>
+            <Bullet />
+            <Spacer horizontal size={10} />
+          </>
+        )}
         <SubsectionHeader selected={selected}>
-          {capitalise(decodeURIComponent(name))}
+          {formatName(name)}
         </SubsectionHeader>
       </NavigationItem>
-      {/* {selected && (
-        <SubNavigation
-          subsection={children}
-          location={location}
-        />
-      )} */}
+      {/* Always show the first level of descendants, but hide the rest unless something is selected */}
+      {children.length > 0 && (depth <= 1 || descendantSelected) ? (
+        <NestedItemList>
+          {children.map(file => (
+            <SidebarItem location={location} item={file} depth={depth + 1} />
+          ))}
+        </NestedItemList>
+      ) : null}
     </ItemWrapper>
   );
 };
 
-const Sidebar = ({ location, files }: { location: Location; files: Tree }) => {
+const Sidebar = ({
+  location,
+  fileTree
+}: {
+  location: Location;
+  fileTree: Tree;
+}) => {
+  const files = fileTree.children;
+
+  // If we only have an index page, don't render the sidebar
   if (files.length === 0) return null;
-  // return null;
 
   return (
     <Wrapper>
       <InnerWrapper>
         <NavigationWrapper aria-label="Primary navigation">
           <ul>
-            {files.map(file => {
-              return file.children.length === 0 ? (
-                <SidebarItem
-                  name={file.name}
-                  selected={isSelected(location, file.name)}
-                />
-              ) : (
-                <SidebarItem
-                  name={file.name}
-                  selected={isSelected(location, file.name)}
-                />
-              );
-
-              // return (
-              //   <Section key={file.name}>
-              //     <NavigationItem to={`/${file.name}`}>
-              //       <SectionHeader
-              //         selected={isSelected(location, file.name)}
-              //       >
-              //         {decodeURIComponent(file.name)}
-              //       </SectionHeader>
-              //     </NavigationItem>
-              //     {file.children.length ? (
-              //       <ul>
-              //         {file.children.map(subsection => {
-              //           const selected = isSelected(location, subsection.name);
-
-              //         })}
-              //       </ul>
-              //     ) : null}
-              //   </Section>
-              // );
-            })}
+            {files.map(file => (
+              <SidebarItem key={file.name} location={location} item={file} />
+            ))}
           </ul>
         </NavigationWrapper>
       </InnerWrapper>
