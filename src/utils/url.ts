@@ -1,7 +1,3 @@
 export function isInternal(url: string): boolean {
-  return /^(\/(?!\/)|\w|\.+\/)/.test(url);
+  return /^(?:\.{0,2}\/(?!\/)|(?!https?:\/\/)[\w\d])/.test(url);
 }
-
-// export function cleanupLink(link = "#") {
-//   return link.replace(/^\/\//, "/");
-// }
