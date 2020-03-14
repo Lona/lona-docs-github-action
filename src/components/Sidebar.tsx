@@ -115,10 +115,12 @@ const SidebarItem = ({
 
 const Sidebar = ({
   location,
-  fileTree
+  fileTree,
+  title
 }: {
   location: Location;
   fileTree: Tree;
+  title: string;
 }) => {
   const files = fileTree.children;
 
@@ -126,8 +128,6 @@ const Sidebar = ({
   if (files.length === 0) return null;
 
   const treeDepth = maxDepth(fileTree);
-
-  console.log(treeDepth);
 
   return (
     <Wrapper>
@@ -140,7 +140,7 @@ const Sidebar = ({
           paddingLeft: `${spacing.sidebar.paddingHorizontal}px`
         }}
       >
-        <Title iconUrl="">Workspace Title</Title>
+        <Title iconUrl="">{title}</Title>
       </div>
       <Spacer size={16} />
       <InnerWrapper>

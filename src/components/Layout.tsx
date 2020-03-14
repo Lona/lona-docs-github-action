@@ -43,7 +43,9 @@ function hasInputPath(x: { inputPath?: string }): x is { inputPath: string } {
 const Layout = ({
   children,
   location,
-  site,
+  site: {
+    siteMetadata: { title, keywords, description }
+  },
   allLonaDocumentPage
 }: {
   children: ReactNode;
@@ -101,25 +103,24 @@ const Layout = ({
       <GlobalStyles />
       <SkipLink href="#MainContent">Skip to main content</SkipLink>
       <Helmet
-        title={site.siteMetadata.title}
+        title={title}
         meta={[
           {
             name: "description",
-            content: site.siteMetadata.title
+            content: title
           },
           {
             name: "keywords",
-            content: site.siteMetadata.keywords.join(", ")
+            content: keywords.join(", ")
           },
           {
             name: "description",
-            content: site.siteMetadata.description
+            content: description
           }
         ]}
       />
-      {/* <Header /> */}
       <Content>
-        <Sidebar fileTree={fileTree} location={location} />
+        <Sidebar title={title} fileTree={fileTree} location={location} />
         <Section>{children}</Section>
       </Content>
     </Page>
