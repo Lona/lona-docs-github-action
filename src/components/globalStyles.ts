@@ -14,7 +14,7 @@ html {
   font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto,
     Segoe UI, Helvetica Neue, sans-serif;
   background-color: #ffffff;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 *,

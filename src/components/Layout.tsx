@@ -8,7 +8,7 @@ import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Section from "./Section";
 
-import { cleanupFiles } from "./utils";
+import { buildFileTree, Tree } from "../utils/tree";
 import { GlobalStyles } from "./globalStyles";
 
 const Page = styled.div`
@@ -17,7 +17,7 @@ const Page = styled.div`
   flex-direction: column;
   min-height: 100vh;
   > * {
-    flex: none;
+    flex: 1 1 0%;
   }
 `;
 
@@ -43,13 +43,20 @@ function hasInputPath(x: { inputPath?: string }): x is { inputPath: string } {
 const Layout = ({
   children,
   location,
-  site,
+  site: {
+    siteMetadata: { title, keywords, description, icon }
+  },
   allLonaDocumentPage
 }: {
   children: ReactNode;
   location: Location;
   site: {
-    siteMetadata: { title: string; keywords: string[]; description: string };
+    siteMetadata: {
+      title: string;
+      keywords: string[];
+      description: string;
+      icon: string | null;
+    };
   };
   allLonaDocumentPage: {
     nodes: { inputPath: string; children: { inputPath?: string }[] }[];
@@ -85,35 +92,45 @@ const Layout = ({
   //     }
   //   }
   // `);
-  const files = cleanupFiles(
+  const fileTree: Tree | null = buildFileTree(
     allLonaDocumentPage.nodes.map(x => ({
       ...x,
       children: x.children.filter(hasInputPath)
     }))
   );
+
+  if (!fileTree) {
+    return <div>Failed to find root Lona page.</div>;
+  }
+
   return (
     <Page>
       <GlobalStyles />
       <SkipLink href="#MainContent">Skip to main content</SkipLink>
       <Helmet
-        title={site.siteMetadata.title}
+        title={title}
         meta={[
           {
             name: "description",
-            content: site.siteMetadata.title
+            content: title
           },
           {
             name: "keywords",
-            content: site.siteMetadata.keywords.join(", ")
+            content: keywords.join(", ")
           },
           {
             name: "description",
-            content: site.siteMetadata.description
+            content: description
           }
         ]}
       />
       <Content>
-        <Sidebar files={files} location={location} />
+        <Sidebar
+          title={title}
+          iconUrl={icon}
+          fileTree={fileTree}
+          location={location}
+        />
         <Section>{children}</Section>
       </Content>
     </Page>

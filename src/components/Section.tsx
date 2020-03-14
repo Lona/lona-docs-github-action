@@ -1,23 +1,19 @@
 import styled from "styled-components";
-import { Colors } from "./ui-constants";
+import { colors, sizes } from "../foundation";
 
 const Section = styled.section`
-  position: relative;
-  z-index: 800;
   flex: 1 1 auto;
-  border-radius: 0.6rem;
-  min-width: 0;
-  max-width: calc(100vw - 350px);
+  color: ${colors.text};
+  padding: 120px 60px;
+  max-width: 1120px;
+  margin: 0 auto;
 
-  color: ${Colors.text};
-  padding: 160px 120px;
-
-  @media (max-width: 1600px) {
-    max-width: calc(100vw - 300px);
+  @media (max-width: ${sizes.breakpoints.medium}) {
+    max-width: 960px;
   }
 
-  @media (max-width: 1280px) {
-    max-width: calc(100vw - 240px);
+  @media (max-width: ${sizes.breakpoints.small}) {
+    max-width: 800px;
   }
 `;
 
