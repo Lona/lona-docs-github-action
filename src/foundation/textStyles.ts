@@ -35,6 +35,13 @@ export const regular = {
   // letterSpacing: 0.1
 };
 
+export const small = {
+  fontSize: typeScale[6],
+  lineHeight: 1.75,
+  fontWeight: 500,
+  color: colors.text
+};
+
 export const regularBold = {
   ...regular,
   fontWeight: 600
