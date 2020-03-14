@@ -9,7 +9,12 @@ export default function Template(props: {
   pageContext: {
     mdx: string;
     site: {
-      siteMetadata: { title: string; keywords: string[]; description: string };
+      siteMetadata: {
+        title: string;
+        keywords: string[];
+        description: string;
+        icon: string | null;
+      };
     };
     allLonaDocumentPage: {
       nodes: { inputPath: string; children: { inputPath?: string }[] }[];
