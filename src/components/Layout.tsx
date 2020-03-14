@@ -8,17 +8,16 @@ import styled from "styled-components";
 import Sidebar from "./Sidebar";
 import Section from "./Section";
 
-import { buildFileTree, Tree } from "./utils";
+import { buildFileTree, Tree } from "../utils/tree";
 import { GlobalStyles } from "./globalStyles";
-import Header from "./navigation/Header";
 
 const Page = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 120px);
+  min-height: 100vh;
   > * {
-    flex: none;
+    flex: 1 1 0%;
   }
 `;
 
@@ -118,7 +117,7 @@ const Layout = ({
           }
         ]}
       />
-      <Header />
+      {/* <Header /> */}
       <Content>
         <Sidebar fileTree={fileTree} location={location} />
         <Section>{children}</Section>

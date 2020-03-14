@@ -1,10 +1,3 @@
-export function capitalise(string: string) {
-  if (!string) {
-    return string;
-  }
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 export type Tree = {
   name: string;
   children: Tree[];
@@ -38,6 +31,12 @@ export function buildFileTree(files: File[]): Tree | null {
   return buildTree(rootFile);
 }
 
-export function cleanupLink(link = "#") {
-  return link.replace(/^\/\//, "/");
+export function maxDepth(tree: Tree): number {
+  function inner(tree: Tree, depth: number): number {
+    if (tree.children.length === 0) return depth;
+
+    return Math.max(...tree.children.map(child => inner(child, depth + 1)));
+  }
+
+  return inner(tree, 1);
 }

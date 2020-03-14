@@ -1,7 +1,8 @@
 import React, { ReactNode } from "react";
 import { Link } from "gatsby";
 import styled from "styled-components";
-import Spacer from "../Spacer";
+import Spacer from "./Spacer";
+import { colors } from "../foundation";
 
 const Container = styled(Link)`
   display: flex;
@@ -18,14 +19,14 @@ const Container = styled(Link)`
 `;
 
 const Label = styled.span`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  color: #000000;
+  color: ${colors.text};
 `;
 
 const Image = styled.img`
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.15);
   border: none;
@@ -41,7 +42,7 @@ export default ({
 }) => (
   <Container to="/">
     <Image src={iconUrl || undefined} />
-    <Spacer horizontal size={20} />
+    <Spacer horizontal size={10} />
     <Label>{children}</Label>
   </Container>
 );

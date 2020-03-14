@@ -1,18 +1,18 @@
 import styled from "styled-components";
-import { Colors } from "./ui-constants";
+import { colors, sizes } from "../foundation";
 
 const Section = styled.section`
   flex: 1 1 auto;
-  color: ${Colors.text};
-  padding: 40px 60px;
+  color: ${colors.text};
+  padding: 120px 60px;
   max-width: 1120px;
   margin: 0 auto;
 
-  @media (max-width: 1600px) {
+  @media (max-width: ${sizes.breakpoints.medium}) {
     max-width: 960px;
   }
 
-  @media (max-width: 1280px) {
+  @media (max-width: ${sizes.breakpoints.small}) {
     max-width: 800px;
   }
 `;

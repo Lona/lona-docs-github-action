@@ -5,7 +5,7 @@ export default function Spacer({
   horizontal
 }: {
   size: number;
-  horizontal: boolean;
+  horizontal?: boolean;
 }) {
   const style: { width?: string; height?: string; flex?: string } = {};
 

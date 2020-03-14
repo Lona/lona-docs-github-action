@@ -1,29 +1,17 @@
 import React from "react";
 import { Link, withPrefix } from "gatsby";
-import styled from "styled-components";
+import styled, { StyledComponent, css } from "styled-components";
 import path from "path";
 
-import { Colors, Spacings } from "./ui-constants";
 import { isInternal } from "../utils/url";
+import { colors, textStyles, spacing } from "../foundation";
 
-// case .paragraph, .quote: return .light
-// case .h6, .h5, .h4: return .regular
-// case .h3: return .medium
-// case .h2: return .semibold
-// case .h1: return .bold
-
-export const h1 = styled.h1`
-  font-size: 42px;
-  line-height: 1.75;
-  font-weight: 700;
-  margin-bottom: 4px;
+export const h1: StyledComponent<"h1", {}> = styled.h1`
+  ${textStyles.heading1}
 `;
 
 export const h2 = styled.h2`
-  font-size: 30px;
-  line-height: 1.75;
-  font-weight: 600;
-  margin-bottom: 4px;
+  ${textStyles.heading2}
 
   ${h1} + & {
     margin-top: 24px;
@@ -31,44 +19,71 @@ export const h2 = styled.h2`
 `;
 
 export const h3 = styled.h3`
-  font-size: 22px;
-  line-height: 1.75;
-  font-weight: 500;
-  margin-bottom: 4px;
+  ${textStyles.heading3}
+
+  ${h1} + &, ${h2} + & {
+    margin-top: 24px;
+  }
 `;
 
-export const h4 = styled.h4`
-  font-size: 16px;
-  line-height: 1.75;
-  margin-bottom: ${Spacings.block};
-`;
+const headingMargins = css`
+  ${h1} + &, ${h2} + &, ${h3} + & {
+    margin-top: 4px;
+  }
 
-export const h5 = styled.h5`
-  font-size: 16px;
-  line-height: 1.75;
-  margin-bottom: ${Spacings.block};
-`;
-
-export const h6 = styled.h6`
-  font-size: 16px;
-  line-height: 1.75;
-  margin-bottom: ${Spacings.block};
+  & + ${h1}, & + ${h2}, & + ${h3} {
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
 `;
 
 export const p = styled.p`
-  font-size: 16px;
-  line-height: 1.75;
-  font-weight: 300;
+  ${textStyles.regular}
+
   margin-bottom: 8px;
 
-  ${h1} + &, ${h2} + &, ${h3} + & {
-    margin-top: 4px;
+  ${headingMargins}
+`;
+
+const Anchor = styled.a`
+  ${textStyles.regular}
+
+  color: ${colors.editableText};
+`;
+
+const PageLink = styled(Link)`
+  ${textStyles.regular};
+  font-weight: 500;
+  color: ${colors.editableText};
+  background: ${colors.blockBackground};
+  text-decoration: none;
+
+  display: block;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  &::before {
+    content: "→  ";
+    white-space: pre;
+  }
+
+  & + ${h1}, & + ${h2}, & + ${h3} {
+    margin-top: 30px;
+    margin-bottom: 8px;
   }
 `;
 
 export const thematicBreak = styled.hr``;
 
-const LinkProxy = (props: {
+export const a = (props: {
   location: Location;
   href: string;
   className?: string;
@@ -77,7 +92,7 @@ const LinkProxy = (props: {
 
   // Use an anchor tag for external links
   if (!isInternal(href)) {
-    return <a {...rest} href={href} />;
+    return <Anchor {...rest} href={href} />;
   }
 
   let newHref = href.replace(/\.md$/, "");
@@ -90,33 +105,22 @@ const LinkProxy = (props: {
     newHref = path.join("/", relativePath, newHref);
   }
 
-  return <Link {...rest} to={newHref} />;
-};
+  const isPage = (props.className || "").split(" ").includes("page");
 
-export const a = styled(LinkProxy)`
-  ${props =>
-    (props.className || "").split(" ").indexOf("page") !== -1
-      ? `
-display: block;
-// background: ${Colors.blockBackground};
-color: ${Colors.editableText};
-// text-decoration: none;
-// padding: 4px 8px;
-margin-bottom: ${Spacings.block};
-font-size: 16px;
-line-height: 1.75;
-font-weight: 500;
-`
-      : ""}
-`;
+  return isPage ? (
+    <PageLink {...rest} to={newHref} />
+  ) : (
+    <Link {...rest} to={newHref} />
+  );
+};
 
 const TokenWrapper = styled.div`
   padding: 4px 12px;
   display: flex;
   flex-direction: row;
   height: 80px;
-  background: ${Colors.blockBackground};
-  margin-bottom: ${Spacings.block};
+  background: ${colors.blockBackground};
+  margin-bottom: ${spacing.block}px;
   align-items: center;
 `;
 
@@ -146,7 +150,7 @@ const TokenDetails = styled.div`
 
   .lona-token-value {
     font-size: 10px;
-    color: ${Colors.textMuted};
+    color: ${colors.textMuted};
   }
 `;
 
