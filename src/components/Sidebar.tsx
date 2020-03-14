@@ -22,7 +22,6 @@ const Wrapper = styled.nav`
 `;
 
 const InnerWrapper = styled.div`
-  // padding: 32px 0;
   overflow-y: auto;
 `;
 
@@ -116,11 +115,13 @@ const SidebarItem = ({
 const Sidebar = ({
   location,
   fileTree,
-  title
+  title,
+  iconUrl
 }: {
   location: Location;
   fileTree: Tree;
   title: string;
+  iconUrl: string | null;
 }) => {
   const files = fileTree.children;
 
@@ -140,7 +141,7 @@ const Sidebar = ({
           paddingLeft: `${spacing.sidebar.paddingHorizontal}px`
         }}
       >
-        <Title iconUrl="">{title}</Title>
+        <Title iconUrl={iconUrl}>{title}</Title>
       </div>
       <Spacer size={16} />
       <InnerWrapper>

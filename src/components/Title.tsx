@@ -28,7 +28,6 @@ const Image = styled.img`
   width: 24px;
   height: 24px;
   background-size: cover;
-  background-color: rgba(0, 0, 0, 0.15);
   border: none;
   outline: none;
 `;
@@ -37,12 +36,15 @@ export default ({
   iconUrl,
   children
 }: {
-  iconUrl: string;
+  iconUrl: string | null;
   children: ReactNode;
-}) => (
-  <Container to="/">
-    <Image src={iconUrl || undefined} />
-    <Spacer horizontal size={10} />
-    <Label>{children}</Label>
-  </Container>
-);
+}) => {
+  const hasIcon = iconUrl !== null && iconUrl !== "";
+  return (
+    <Container to="/">
+      {hasIcon && <Image src={iconUrl!} />}
+      {hasIcon && <Spacer horizontal size={10} />}
+      <Label>{children}</Label>
+    </Container>
+  );
+};

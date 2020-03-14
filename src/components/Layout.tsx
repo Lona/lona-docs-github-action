@@ -44,14 +44,19 @@ const Layout = ({
   children,
   location,
   site: {
-    siteMetadata: { title, keywords, description }
+    siteMetadata: { title, keywords, description, icon }
   },
   allLonaDocumentPage
 }: {
   children: ReactNode;
   location: Location;
   site: {
-    siteMetadata: { title: string; keywords: string[]; description: string };
+    siteMetadata: {
+      title: string;
+      keywords: string[];
+      description: string;
+      icon: string | null;
+    };
   };
   allLonaDocumentPage: {
     nodes: { inputPath: string; children: { inputPath?: string }[] }[];
@@ -120,7 +125,12 @@ const Layout = ({
         ]}
       />
       <Content>
-        <Sidebar title={title} fileTree={fileTree} location={location} />
+        <Sidebar
+          title={title}
+          iconUrl={icon}
+          fileTree={fileTree}
+          location={location}
+        />
         <Section>{children}</Section>
       </Content>
     </Page>
