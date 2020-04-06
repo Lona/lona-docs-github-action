@@ -1,14 +1,12 @@
+import React from "react";
 import styled from "styled-components";
 import { colors, sizes } from "../foundation";
 
-const Section = styled.section`
-  flex: 1 1 auto;
+const Section = styled.main`
   color: ${colors.text};
   padding: 120px 60px;
   max-width: 1120px;
   margin: 0 auto;
-  height: 100vh;
-  overflow-y: scroll;
 
   @media (max-width: ${sizes.breakpoints.medium}) {
     max-width: 960px;
@@ -19,4 +17,15 @@ const Section = styled.section`
   }
 `;
 
-export default Section;
+const Wrapper = styled.section`
+  flex: 1 1 auto;
+  margin: 0;
+  height: 100vh;
+  overflow-y: scroll;
+`;
+
+export default (props: { children: React.ReactNode }) => (
+  <Wrapper>
+    <Section {...props} />
+  </Wrapper>
+);
