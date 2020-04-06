@@ -4,7 +4,17 @@ import styled, { StyledComponent, css } from "styled-components";
 import path from "path";
 
 import { isInternal } from "../utils/url";
-import { colors, textStyles, spacing } from "../foundation";
+import { colors, textStyles } from "../foundation";
+
+export const code = styled.pre`
+  background-color: ${colors.divider};
+  padding: 10px;
+`;
+
+export const inlineCode = styled.code`
+  background-color: ${colors.divider};
+  padding: 1px 3px;
+`;
 
 export const h1: StyledComponent<"h1", {}> = styled.h1`
   ${textStyles.heading1}
@@ -89,8 +99,9 @@ export const a = (props: {
   location: Location;
   href: string;
   className?: string;
+  children?: React.ReactChildren | string;
 }) => {
-  const { location, href, ...rest } = props;
+  const { location, href = "", ...rest } = props;
 
   // Use an anchor tag for external links
   if (!isInternal(href)) {
@@ -126,7 +137,7 @@ const TokenBlock = styled.div`
   ${headingMargins};
 `;
 
-const tokenPreviewStyles = css`
+const tokenPreviewStyles = `
   width: 60px;
   height: 60px;
   margin-right: 8px;
@@ -212,7 +223,7 @@ export const div = (props: {
         return (
           <ColorTokenPreview
             style={{
-              backgroundColor: color
+              backgroundColor: color,
             }}
             {...props}
           />
@@ -237,7 +248,7 @@ export const div = (props: {
               fontWeight: fontWeight ? parseInt(fontWeight) : 400,
               letterSpacing,
               lineHeight,
-              color
+              color,
             }}
             {...rest}
           >
@@ -260,7 +271,7 @@ export const div = (props: {
           <ShadowTokenPreview {...rest}>
             <ShadowTokenPreviewBoxDiagram
               style={{
-                boxShadow: `${x}px ${y}px ${blur}px ${radius}px ${color}`
+                boxShadow: `${x}px ${y}px ${blur}px ${radius}px ${color}`,
               }}
             />
           </ShadowTokenPreview>

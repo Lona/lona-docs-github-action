@@ -8,17 +8,6 @@ export default function Template(props: {
   location: Location;
   pageContext: {
     mdx: string;
-    site: {
-      siteMetadata: {
-        title: string;
-        keywords: string[];
-        description: string;
-        icon: string | null;
-      };
-    };
-    allLonaDocumentPage: {
-      nodes: { inputPath: string; children: { inputPath?: string }[] }[];
-    };
   };
 }) {
   const { location, pageContext } = props;
@@ -28,17 +17,13 @@ export default function Template(props: {
       ...components,
       a: (props: { href: string; className?: string }) => (
         <components.a location={location} {...props} />
-      )
+      ),
     }),
     [location.href]
   );
 
   return (
-    <Layout
-      location={location}
-      site={pageContext.site}
-      allLonaDocumentPage={pageContext.allLonaDocumentPage}
-    >
+    <Layout location={location}>
       <MDXProvider components={componentsWithLocation}>
         <MDXRenderer>{pageContext.mdx}</MDXRenderer>
       </MDXProvider>

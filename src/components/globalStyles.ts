@@ -100,6 +100,7 @@ ul {
 
 nav & ol,
 nav & ul {
+  list-style: none;
   list-style-image: none;
 }
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
-// import { useStaticQuery } from "gatsby";
-// need to import graphql on another line: https://stackoverflow.com/questions/55877659/how-to-fix-gatsby-1-is-undefined
-// import { graphql } from "gatsby";
+import path from "path";
+import { Config } from "@lona/compiler";
+import { useStaticQuery, graphql } from "gatsby";
 import Helmet from "react-helmet";
 import styled from "styled-components";
 
@@ -43,65 +43,70 @@ function hasInputPath(x: { inputPath?: string }): x is { inputPath: string } {
 const Layout = ({
   children,
   location,
-  site: {
-    siteMetadata: { title, keywords, description, icon }
-  },
-  allLonaDocumentPage
 }: {
   children: ReactNode;
   location: Location;
-  site: {
-    siteMetadata: {
-      title: string;
-      keywords: string[];
-      description: string;
-      icon: string | null;
-    };
-  };
-  allLonaDocumentPage: {
-    nodes: { inputPath: string; children: { inputPath?: string }[] }[];
-  };
 }) => {
-  // TODO: for some reason we can't use `useStaticQuery` here: "The result of this StaticQuery could not be fetched."
-  // so instead I'm passing it down as props but it's not really clean
-  // const data = useStaticQuery<{
-  //   site: {
-  //     siteMetadata: { title: string; keywords: string[]; description: string };
-  //   };
-  //   allLonaDocumentPage: {
-  //     nodes: { inputPath: string; children: { inputPath?: string }[] }[];
-  //   };
-  // }>(graphql`
-  //   query LayoutQuery {
-  //     site {
-  //       siteMetadata {
-  //         title
-  //         keywords
-  //         description
-  //       }
-  //     }
-  //     allLonaDocumentPage {
-  //       nodes {
-  //         inputPath
-  //         children {
-  //           ... on LonaDocumentPage {
-  //             inputPath
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // `);
+  const { allLonaConfig, allLonaDocumentPage } = useStaticQuery<{
+    allLonaConfig: {
+      nodes: { config: Config }[];
+    };
+    allLonaDocumentPage: {
+      nodes: {
+        id: string;
+        inputPath: string;
+        children: { inputPath?: string }[];
+      }[];
+    };
+  }>(graphql`
+    query LayoutQuery {
+      allLonaConfig {
+        nodes {
+          config {
+            workspaceName
+            workspacePath
+            workspaceIcon
+            workspaceDescription
+            workspaceKeywords
+          }
+        }
+      }
+      allLonaDocumentPage {
+        nodes {
+          id
+          inputPath
+          children {
+            ... on LonaDocumentPage {
+              inputPath
+            }
+          }
+        }
+      }
+    }
+  `);
+
   const fileTree: Tree | null = buildFileTree(
-    allLonaDocumentPage.nodes.map(x => ({
+    allLonaDocumentPage.nodes.map((x) => ({
       ...x,
-      children: x.children.filter(hasInputPath)
+      children: x.children.filter(hasInputPath),
     }))
   );
 
   if (!fileTree) {
     return <div>Failed to find root Lona page.</div>;
   }
+
+  const config = allLonaConfig.nodes[0]?.config;
+
+  const { title, icon, description, keywords } = {
+    title:
+      config.workspaceName || config.workspacePath
+        ? path.basename(config.workspacePath)
+        : "" || `Design System`,
+    icon: config.workspaceIcon || null,
+    description: config.workspaceDescription || "",
+    keywords: config.workspaceKeywords || ["Lona", "design system"],
+  };
 
   return (
     <Page>
@@ -112,17 +117,14 @@ const Layout = ({
         meta={[
           {
             name: "description",
-            content: title
+            content: description || title,
           },
           {
             name: "keywords",
-            content: keywords.join(", ")
+            content: keywords.join(", "),
           },
-          {
-            name: "description",
-            content: description
-          }
         ]}
+        link={icon ? [{ rel: "icon", type: "image/png", href: icon }] : []}
       />
       <Content>
         <Sidebar

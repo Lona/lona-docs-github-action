@@ -1,11 +1,7 @@
 import path from "path";
 import { BuildArgs } from "gatsby";
 import fs from "fs";
-import * as lona from "@lona/compiler";
 import convertDate from "rfc822-date";
-import { ConvertedWorkspace } from "@lona/compiler/lib/plugins/documentation";
-
-const tokensOutputPath = `./public/flat-tokens.json`;
 const sketchLibRSSOutputPath = `./public/sketch-library.xml`;
 
 /**
@@ -34,17 +30,6 @@ See docs here - https://github.com/Lona/lona-docs-github-action
       `);
     return;
   }
-
-  const content: ConvertedWorkspace = await lona.convert(
-    workspacePath,
-    "tokens"
-  );
-
-  const outputDir = path.dirname(tokensOutputPath);
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
-  fs.writeFileSync(tokensOutputPath, JSON.stringify(content, null, "  "));
 
   const result = await graphql(`
     {

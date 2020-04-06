@@ -7,6 +7,8 @@ const Section = styled.section`
   padding: 120px 60px;
   max-width: 1120px;
   margin: 0 auto;
+  height: 100vh;
+  overflow-y: scroll;
 
   @media (max-width: ${sizes.breakpoints.medium}) {
     max-width: 960px;

@@ -29,8 +29,9 @@ async function run() {
             GATSBY_PATH_PREFIX: pathPrefix,
             GATSBY_WORKSPACE_PATH: workspace_path,
             GATSBY_VERSION: version,
-            GATSBY_BASE_URL: baseURL
-          }
+            GATSBY_BASE_URL: baseURL,
+            GATSBY_GITHUB_REPOSITORY: process.env.GITHUB_REPOSITORY,
+          },
         },
         (error, stdout, stderr) => {
           core.debug(stdout);
