@@ -4,11 +4,47 @@ import styled from "styled-components";
 
 import Layout from "../components/Layout";
 import * as Components from "../components/Mdx-Components";
+import { Link } from "../components/Button";
 
 const Steps = styled.ol`
   list-style: decimal;
   padding-left: 25px;
 `;
+
+const SvgWrapper = styled.svg`
+  display: inline;
+`;
+
+const SketchIcon = () => (
+  <SvgWrapper
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="14.5"
+    viewBox="0 0 394 356"
+  >
+    <g fillRule="nonzero" fill="none">
+      <path
+        fill="#FDB300"
+        d="M85.79 11.715L196.603 0l110.812 11.715 85.79 115.166-196.602 228.942L0 126.881z"
+      />
+      <path fill="#EA6C00" d="M79.634 126.881l116.969 228.942L0 126.881z" />
+      <path
+        fill="#EA6C00"
+        d="M313.571 126.881L196.602 355.823l196.603-228.942z"
+      />
+      <path fill="#FDAD00" d="M79.634 126.881h233.938L196.603 355.823z" />
+      <g>
+        <path fill="#FDD231" d="M196.603 0L85.79 11.715l-6.156 115.166z" />
+        <path fill="#FDD231" d="M196.602 0l110.813 11.715 6.156 115.166z" />
+        <path
+          fill="#FDAD00"
+          d="M393.206 126.881L307.415 11.715l6.157 115.166zM0 126.881L85.79 11.715l-6.156 115.166z"
+        />
+        <path fill="#FEEEB7" d="M196.603 0L79.634 126.881h233.938z" />
+      </g>
+    </g>
+  </SvgWrapper>
+);
 
 export default (props: {
   location: Location;
@@ -30,13 +66,15 @@ export default (props: {
         <Components.h3>Sketch</Components.h3>
         <Components.p>
           Add the Sketch library:{" "}
-          <a
-            href={`sketch://add-library?url=${encodeURIComponent(
-              `${pageContext.baseURL}${withPrefix("/sketch-library.xml")}`
-            )}`}
-          >
-            Add Library
-          </a>
+          <Components.p>
+            <Link
+              href={`sketch://add-library?url=${encodeURIComponent(
+                `${pageContext.baseURL}${withPrefix("/sketch-library.xml")}`
+              )}`}
+            >
+              <SketchIcon /> Add the Sketch Library
+            </Link>
+          </Components.p>
         </Components.p>
         <Components.h3>Figma</Components.h3>
         <Components.p>Coming soon</Components.p>
