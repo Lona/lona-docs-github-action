@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { withPrefix } from "gatsby";
 import styled from "styled-components";
 
 import Layout from "../components/Layout";
 import * as Components from "../components/Mdx-Components";
 import { Link } from "../components/Button";
+import { Select } from "../components/Select";
 
 const Steps = styled.ol`
   list-style: decimal;
@@ -54,6 +55,7 @@ export default (props: {
   };
 }) => {
   const { location, pageContext } = props;
+  const [manager, setManager] = useState("Npm");
 
   const [owner, repo] = (pageContext.githubRepo || "/").split("/");
 
@@ -80,6 +82,14 @@ export default (props: {
         <Components.p>Coming soon</Components.p>
 
         <Components.h2>Code Libraries</Components.h2>
+        <Select
+          value={manager}
+          onChange={(e) => setManager(e.target.value)}
+          style={{ float: "right" }}
+        >
+          <option>Npm</option>
+          <option>Yarn</option>
+        </Select>
         <Components.h3>React</Components.h3>
         <Components.p>
           You can install the{" "}
@@ -104,12 +114,16 @@ export default (props: {
               In the same directory as your{" "}
               <Components.inlineCode>package.json</Components.inlineCode> file,
               creating or editing an{" "}
-              <Components.inlineCode>.npmrc</Components.inlineCode> file to
-              include a line specifying GitHub Packages URL and the account
-              owner.
+              <Components.inlineCode>
+                {manager === "Yarn" ? ".yarnrc" : ".npmrc"}
+              </Components.inlineCode>{" "}
+              file to include a line specifying GitHub Packages URL and the
+              account owner.
               <pre>
                 <Components.code>
-                  registry=https://npm.pkg.github.com/{owner}
+                  {manager === "Yarn"
+                    ? `"@${owner.toLowerCase()}:registry" "https://npm.pkg.github.com"`
+                    : `registry=https://npm.pkg.github.com/${owner.toLowerCase()}`}
                 </Components.code>
               </pre>
             </li>
@@ -118,7 +132,8 @@ export default (props: {
               <Components.inlineCode>package.json</Components.inlineCode> file.
               <pre>
                 <Components.code>
-                  npm install @{owner}/{repo.toLowerCase()}
+                  {manager === "Yarn" ? `yarn add` : `npm install`} @
+                  {owner.toLowerCase()}/{repo.toLowerCase()}
                 </Components.code>
               </pre>
             </li>
