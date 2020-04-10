@@ -4,15 +4,16 @@ import { SourceNodesArgs, Node, CreateSchemaCustomizationArgs } from "gatsby";
 import chokidar from "chokidar";
 import { createContentDigest } from "gatsby-core-utils";
 import * as lona from "@lona/compiler";
+import { ConvertedWorkspace as TokensWorkspace } from "@lona/compiler/lib/plugins/tokens";
 import {
-  ConvertedWorkspace,
-  ConvertedFile,
+  ConvertedWorkspace as DocumentationWorkspace,
+  ConvertedFile as DocumentationFile
 } from "@lona/compiler/lib/plugins/documentation";
 
 const tokensOutputPath = `./public/flat-tokens.json`;
 
 export function createSchemaCustomization({
-  actions,
+  actions
 }: CreateSchemaCustomizationArgs) {
   const { createTypes } = actions;
 
@@ -99,20 +100,17 @@ See docs here - https://github.com/Lona/lona-docs-github-action
           contentDigest: createContentDigest(JSON.stringify(config)),
           content: JSON.stringify(config),
           type: `LonaConfig`,
-          mediaType: "application/json",
-        },
+          mediaType: "application/json"
+        }
       });
 
-      const tokens: ConvertedWorkspace = await lona.convert(
+      const tokens: TokensWorkspace = await lona.convert(
         workspacePath,
         "tokens"
       );
 
-      tokens.files.forEach((f) => {
-        if (f.contents.type !== "flatTokens") {
-          return;
-        }
-        f.contents.value.forEach((token) => {
+      tokens.files.forEach(f => {
+        f.contents.value.forEach(token => {
           createNode({
             id: createId(
               `${workspacePath}_token_${token.qualifiedName.join(".")}`
@@ -123,8 +121,8 @@ See docs here - https://github.com/Lona/lona-docs-github-action
               contentDigest: createContentDigest(JSON.stringify(token)),
               content: JSON.stringify(token),
               type: `LonaToken`,
-              mediaType: "application/json",
-            },
+              mediaType: "application/json"
+            }
           });
         });
       });
@@ -135,12 +133,12 @@ See docs here - https://github.com/Lona/lona-docs-github-action
       }
       fs.writeFileSync(tokensOutputPath, JSON.stringify(tokens, null, "  "));
 
-      const content: ConvertedWorkspace = await lona.convert(
+      const content: DocumentationWorkspace = await lona.convert(
         workspacePath,
         "documentation"
       );
 
-      const root = content.files.find((x) => x.inputPath === "README.md");
+      const root = content.files.find(x => x.inputPath === "README.md");
 
       if (!root) {
         reporter.info(`Cannot find root file of the Lona workspace`);
@@ -166,8 +164,8 @@ See docs here - https://github.com/Lona/lona-docs-github-action
   };
 
   function makeNode(
-    data: ConvertedWorkspace,
-    obj: ConvertedFile,
+    data: DocumentationWorkspace,
+    obj: DocumentationFile,
     parent?: Node
   ) {
     if (obj.contents.type !== "documentationPage") {
@@ -185,8 +183,8 @@ See docs here - https://github.com/Lona/lona-docs-github-action
         contentDigest: createContentDigest(obj.contents.value.mdxString),
         content: obj.contents.value.mdxString,
         type: `LonaDocumentPage`,
-        mediaType: "text/x-markdown",
-      },
+        mediaType: "text/x-markdown"
+      }
     });
 
     const lonaNode = getNode(id) as Node;
@@ -195,13 +193,13 @@ See docs here - https://github.com/Lona/lona-docs-github-action
       createParentChildLink({ parent, child: lonaNode });
     }
 
-    obj.contents.value.children.forEach((inputPath) => {
+    obj.contents.value.children.forEach(inputPath => {
       const resolvedInputPath = `${obj.inputPath.replace(
         /README.md$/g,
         ""
       )}${inputPath}`;
       const child = data.files.find(
-        (x) =>
+        x =>
           x.inputPath === resolvedInputPath ||
           x.inputPath === `${resolvedInputPath}/README.md`
       );
@@ -222,9 +220,9 @@ See docs here - https://github.com/Lona/lona-docs-github-action
       `**/bower_components`,
       `**/node_modules`,
       `../**/dist/**`,
-      ...((pluginOptions || {}).ignore || []),
+      ...((pluginOptions || {}).ignore || [])
     ],
-    ignoreInitial: true,
+    ignoreInitial: true
   });
 
   watcher.on(`add`, () => {
@@ -235,12 +233,12 @@ See docs here - https://github.com/Lona/lona-docs-github-action
     createNodesForWorkspace();
   });
 
-  watcher.on(`unlink`, (path) => {
+  watcher.on(`unlink`, path => {
     deletePathNode(path);
     createNodesForWorkspace();
   });
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     watcher.on(`ready`, () => {
       createNodesForWorkspace().then(resolve);
     });

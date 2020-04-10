@@ -84,7 +84,7 @@ export default (props: {
         <Components.h2>Code Libraries</Components.h2>
         <Select
           value={manager}
-          onChange={(e) => setManager(e.target.value)}
+          onChange={e => setManager(e.target.value)}
           style={{ float: "right" }}
         >
           <option>Npm</option>

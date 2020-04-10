@@ -223,7 +223,7 @@ export const div = (props: {
         return (
           <ColorTokenPreview
             style={{
-              backgroundColor: color,
+              backgroundColor: color
             }}
             {...props}
           />
@@ -248,7 +248,7 @@ export const div = (props: {
               fontWeight: fontWeight ? parseInt(fontWeight) : 400,
               letterSpacing,
               lineHeight,
-              color,
+              color
             }}
             {...rest}
           >
@@ -271,7 +271,7 @@ export const div = (props: {
           <ShadowTokenPreview {...rest}>
             <ShadowTokenPreviewBoxDiagram
               style={{
-                boxShadow: `${x}px ${y}px ${blur}px ${radius}px ${color}`,
+                boxShadow: `${x}px ${y}px ${blur}px ${radius}px ${color}`
               }}
             />
           </ShadowTokenPreview>

@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import path from "path";
 import { Config } from "@lona/compiler";
 import { useStaticQuery, graphql } from "gatsby";
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet";
 import styled from "styled-components";
 
 import Sidebar from "./Sidebar";
@@ -42,7 +42,7 @@ function hasInputPath(x: { inputPath?: string }): x is { inputPath: string } {
 
 const Layout = ({
   children,
-  location,
+  location
 }: {
   children: ReactNode;
   location: Location;
@@ -86,9 +86,9 @@ const Layout = ({
   `);
 
   const fileTree: Tree | null = buildFileTree(
-    allLonaDocumentPage.nodes.map((x) => ({
+    allLonaDocumentPage.nodes.map(x => ({
       ...x,
-      children: x.children.filter(hasInputPath),
+      children: x.children.filter(hasInputPath)
     }))
   );
 
@@ -105,7 +105,7 @@ const Layout = ({
         : "" || `Design System`,
     icon: config.workspaceIcon || null,
     description: config.workspaceDescription || "",
-    keywords: config.workspaceKeywords || ["Lona", "design system"],
+    keywords: config.workspaceKeywords || ["Lona", "design system"]
   };
 
   return (
@@ -117,12 +117,12 @@ const Layout = ({
         meta={[
           {
             name: "description",
-            content: description || title,
+            content: description || title
           },
           {
             name: "keywords",
-            content: keywords.join(", "),
-          },
+            content: keywords.join(", ")
+          }
         ]}
         link={icon ? [{ rel: "icon", type: "image/png", href: icon }] : []}
       />

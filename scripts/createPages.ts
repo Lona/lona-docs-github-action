@@ -24,8 +24,8 @@ export async function createPages(
     ),
     context: {
       baseURL,
-      githubRepo,
-    },
+      githubRepo
+    }
   });
 
   const result = await graphql<{
@@ -60,7 +60,7 @@ export async function createPages(
 
   const { allLonaDocumentPage } = result.data;
 
-  allLonaDocumentPage.nodes.forEach((n) => {
+  allLonaDocumentPage.nodes.forEach(n => {
     const pagePath = `/${n.inputPath
       .replace(/README\.md$/g, "")
       .replace(/\.md$/g, "")}`;
@@ -69,8 +69,8 @@ export async function createPages(
       path: pagePath,
       component: path.join(__dirname, "../src/templates/mdx.tsx"),
       context: {
-        mdx: n.childMdx.body,
-      },
+        mdx: n.childMdx.body
+      }
     });
     getNodeAndSavePathDependency(n.id, pagePath);
   });

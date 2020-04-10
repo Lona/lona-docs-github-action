@@ -38,15 +38,14 @@ const NavigationWrapper = styled.nav`
 `;
 
 const NavigationItem = styled(Link)<{ selected: boolean; depth: number }>`
-  ${(props) => (props.selected ? textStyles.regularBold : textStyles.regular)};
+  ${props => (props.selected ? textStyles.regularBold : textStyles.regular)};
   height: 36px;
   display: flex;
   align-items: center;
   text-decoration: none;
-  padding-left: ${(props) =>
-    `${
-      spacing.sidebar.paddingHorizontal + Math.max(props.depth - 1, 0) * 20
-    }px`};
+  padding-left: ${props =>
+    `${spacing.sidebar.paddingHorizontal +
+      Math.max(props.depth - 1, 0) * 20}px`};
 
   &:hover {
     background: ${colors.divider};
@@ -84,7 +83,7 @@ const Bullet = styled.span`
 const SidebarItem = ({
   location,
   item: { name, children, url },
-  depth = 0,
+  depth = 0
 }: {
   location: Location;
   item: Tree;
@@ -109,7 +108,7 @@ const SidebarItem = ({
       {/* Always show the first level of descendants, but hide the rest unless something is selected */}
       {children.length > 0 && (depth === 0 || descendantSelected) ? (
         <ul>
-          {children.map((file) => (
+          {children.map(file => (
             <SidebarItem location={location} item={file} depth={depth + 1} />
           ))}
         </ul>
@@ -122,7 +121,7 @@ const Sidebar = ({
   location,
   fileTree,
   title,
-  iconUrl,
+  iconUrl
 }: {
   location: Location;
   fileTree: Tree;
@@ -161,7 +160,7 @@ const Sidebar = ({
             height: "64px",
             display: "flex",
             alignItems: "center",
-            paddingLeft: `${spacing.sidebar.paddingHorizontal}px`,
+            paddingLeft: `${spacing.sidebar.paddingHorizontal}px`
           }}
         >
           <Title iconUrl={iconUrl}>{title}</Title>
@@ -171,14 +170,14 @@ const Sidebar = ({
           <NavigationWrapper aria-label="Primary navigation">
             <ul>
               {withSeparator(
-                files.map((file) => (
+                files.map(file => (
                   <SidebarItem
                     key={file.name}
                     location={location}
                     item={file}
                   />
                 )),
-                (index) => (
+                index => (
                   <Spacer
                     key={`separator-${index}`}
                     size={treeDepth > 1 ? 12 : 4}
@@ -196,7 +195,7 @@ const Sidebar = ({
           item={{
             name: "Design System Artifacts",
             url: "lona-design-artifacts",
-            children: [],
+            children: []
           }}
         />
       ) : null}

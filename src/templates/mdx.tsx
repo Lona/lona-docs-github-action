@@ -17,7 +17,7 @@ export default function Template(props: {
       ...components,
       a: (props: { href: string; className?: string }) => (
         <components.a location={location} {...props} />
-      ),
+      )
     }),
     [location.href]
   );
