@@ -34,7 +34,7 @@
     "gatsby": "^2.20.15",
     "gatsby-cli": "^2.11.5",
     "gatsby-core-utils": "^1.1.1",
-    "gatsby-plugin-mdx": "^1.1.6",
+    "gatsby-plugin-mdx": "^2.14.1",
     "gatsby-plugin-react-helmet": "^3.2.1",
     "gatsby-plugin-styled-components": "^3.2.1",
     "gatsby-plugin-typescript": "^2.3.1",
